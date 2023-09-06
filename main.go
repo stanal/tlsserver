@@ -98,7 +98,7 @@ func EncodePrivateKeyToPem(key *ecdsa.PrivateKey) (string, error) {
 // Adapted from Go 1.11.3 crypto/x509/verify_test.go:TestPathologicalChain
 // Returns (privkeyPem, fullchainPem)
 func makePathologicalChain(domain string, inters int) (string, string) {
-	root, rootKey, err := generateCert(domain, true, nil, nil)
+	root, rootKey, err := generateCert("rootcn", true, nil, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -111,7 +111,8 @@ func makePathologicalChain(domain string, inters int) (string, string) {
 	fullchainReverse = append(fullchainReverse, rootca)
 
 	for i := 0; i < inters; i++ {
-		root, rootKey, err = generateCert(domain, true, root, rootKey)
+		root, rootKey, err = generateCert("mid", true, root, rootKey)
+		//root, rootKey, err = generateCert("mid"+strconv.Itoa(i), true, root, rootKey)
 		if err != nil {
 			log.Fatal(err)
 		}

@@ -25,4 +25,13 @@ args:
 - when client not load cert/root.pem, the client will loop verify for long time as the intermidiates count incresase  in webpki 0.22.0 and 0.22.1 
 - when client load cert/root.pem, then it will end with encount signatures limit in webpki 0.22.1 quickly  
 
+# Reason
+- root, rootKey, err = generateCert("mid", true, root, rootKey)
+- when set every itermidiate cerificate's cn to the same name, will emit the bug 
+- At normal, set every intermidiate certificate's cn to different name, will not emit the bug
+- but, openssl will always return verified failed inmedetely 
 
+# openssl test
+- after generate cert, then exe update_os.sh to update root.pem to system cert store
+- then exe command 
+ - openssl s_client -showcerts -servername localhost -connect localhost:8423
